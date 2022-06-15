@@ -14,7 +14,7 @@ CREATE TABLE YetiCave.lots
     id INT AUTO_INCREMENT PRIMARY KEY,
     add_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     lot_title CHAR(64),
-    lot_description CHAR(256),
+    lot_description TEXT,
     lot_image CHAR(64),
     start_price int,
     end_price int,
