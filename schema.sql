@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS YetiCave;
 create database YetiCave
 default character set utf8
 default collate utf8_general_ci;
