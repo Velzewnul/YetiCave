@@ -13,26 +13,27 @@ CREATE TABLE categories
 
 CREATE TABLE lots
 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    add_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    lot_title VARCHAR(64) NOT NULL,
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    add_date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    lot_title       VARCHAR(64) NOT NULL,
     lot_description TEXT,
-    lot_image VARCHAR(64),
-    start_price int NOT NULL,
-    end_date DATE,
-    bet_step int,
-    user_id int,
-    winner_id int,
-    category_id int,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (winner_id) REFERENCES users(id),
-    FOREIGN KEY (category_id) REFERENCES categories(id);
+    lot_image       VARCHAR(64),
+    start_price     int         NOT NULL,
+    end_date        DATE,
+    bet_step        int,
+    user_id         int,
+    winner_id       int,
+    category_id     int,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (winner_id) REFERENCES users (id),
+    FOREIGN KEY (category_id) REFERENCES categories (id)
+);
 
 CREATE TABLE bets
 (
     id INT AUTO_INCREMENT PRIMARY KEY,
     bet_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    bet_sum int NOT NULL
+    bet_sum int NOT NULL,
     user_id int,
     lot_id int,
     FOREIGN KEY (user_id) REFERENCES users(id),
