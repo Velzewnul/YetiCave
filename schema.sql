@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS YetiCave;
+drop database if exists YetiCave;
 create database YetiCave
 default character set utf8
 default collate utf8_general_ci;
@@ -9,6 +9,16 @@ CREATE TABLE categories
     id INT AUTO_INCREMENT PRIMARY KEY,
     category_name char(64) NOT NULL UNIQUE,
     symbolic_name char(64) NOT NULL UNIQUE
+);
+
+CREATE TABLE users
+(
+    id                INT AUTO_INCREMENT PRIMARY KEY,
+    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    email             char(64) NOT NULL UNIQUE,
+    name              char(10) NOT NULL,
+    password          VARCHAR(12) NOT NULL,
+    contact_info      char(128) NOT NULL
 );
 
 CREATE TABLE lots
@@ -24,9 +34,9 @@ CREATE TABLE lots
     user_id         int,
     winner_id       int,
     category_id     int,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (winner_id) REFERENCES users (id),
-    FOREIGN KEY (category_id) REFERENCES categories (id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (winner_id) REFERENCES users(id),
+    FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
 CREATE TABLE bets
@@ -40,16 +50,4 @@ CREATE TABLE bets
     FOREIGN KEY (lot_id) REFERENCES lots(id)
 );
 
-CREATE TABLE users
-(
-    id                INT AUTO_INCREMENT PRIMARY KEY,
-    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    email             char(64) NOT NULL UNIQUE,
-    name              char(10) NOT NULL,
-    password          VARCHAR(12) NOT NULL,
-    contact_info      char(128) NOT NULL,
-    lot_id int,
-    bet_id int,
-    FOREIGN KEY (lot_id) REFERENCES lots(id),
-    FOREIGN KEY (bet_id) REFERENCES bets(id)
-);
+
