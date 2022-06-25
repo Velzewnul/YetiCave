@@ -24,17 +24,15 @@ if (!$link) {
     } else {
         $error = mysqli_error($link);
     }
-};
-$sql = "SELECT lots.lot_title, lots.start_price, lots.lot_image, lots.end_date, lots.category_id"
-    . "JOIN categories ON lots.category.id=categories.id"
-    . "ORDER BY add_date DEST LIMIT 6";
+}
+$sql = get_query_list_lots('2022-07-15');
 
 $res = mysqli_query($link, $sql);
     if ($res) {
         $goods = mysqli_fetch_all($res, MYSQLI_ASSOC);
     } else {
         $error = mysqli_error($link);
-    };
+    }
 
 $page_content = include_template("main.php",[
     "categories" => $categories,

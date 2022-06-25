@@ -31,3 +31,15 @@
 
         return $res;
     }
+
+/**
+ * Формирует SQL-запрос для получения списка новых лотов от определенной даты, с сортировкой
+ * @param string $date Дата в виде строки, в формате 'YYYY-MM-DD'
+ * @return string SQL-запрос
+ */
+function get_query_list_lots($date)
+{
+    return "SELECT lots.lot_title, lots.start_price, lots.lot_image, lots.end_date, categories.category_name FROM lots
+    JOIN categories ON lots.category_id=categories.id
+    WHERE end_date > $date ORDER BY end_date DESC";
+}
