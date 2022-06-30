@@ -15,20 +15,32 @@ if (!$link) {
         $error = mysqli_error($link);
     }
 }
-$sql = get_query_list_lots('2022-07-15');
+
+$id=filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+if ($id) {
+    $sql = get_query_lot($id);
+} else {
+    http_response_code(404);
+    die();
+}
 
 $res = mysqli_query($link, $sql);
-    if ($res) {
-        $goods = mysqli_fetch_all($res, MYSQLI_ASSOC);
-    } else {
-        $error = mysqli_error($link);
-    }
+if ($res) {
+    $lot = mysqli_fetch_assoc($res);
+} else {
+    $error = mysqli_error($link);
+}
 
-$page_content = include_template("main.php",[
+if (!$lot) {
+    http_response_code(404);
+    die();
+}
+
+$page_content = include_template("lot-main.php", [
     "categories" => $categories,
-    "goods" => $goods
+    "lot" => $lot
 ]);
-$layout_content = include_template("layout.php",[
+$layout_content = include_template("layout.php", [
     "content" => $page_content,
     "categories" => $categories,
     "title" => "Главная",

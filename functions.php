@@ -39,7 +39,19 @@
  */
 function get_query_list_lots($date)
 {
-    return "SELECT lots.lot_title, lots.start_price, lots.lot_image, lots.end_date, categories.category_name FROM lots
+    return "SELECT lots.id, lots.lot_title, lots.start_price, lots.lot_image, lots.end_date, categories.category_name FROM lots
     JOIN categories ON lots.category_id=categories.id
     WHERE end_date > $date ORDER BY end_date DESC";
+}
+
+/**
+ * Формирует SQL-запрос для показа лота по ID на странице lot.php
+ * @param integer $lot_id айд лота
+ * @return string SQL-запрос
+ */
+function get_query_lot($lot_id)
+{
+    return "SELECT lots.lot_title, lots.start_price, lots.lot_image, lots.end_date, categories.category_name FROM lots
+    JOIN categories ON lots.category_id=categories.id
+    WHERE lots.id = $lot_id";
 }
