@@ -55,3 +55,12 @@ function get_query_lot($lot_id)
     JOIN categories ON lots.category_id=categories.id
     WHERE lots.id = $lot_id";
 }
+
+/**
+ * Получает данные из массива POST
+ * @param $name mixed данные в форме
+ * @return mixed данные из массива
+ */
+function getPostVal($name) {
+    return filter_input(INPUT_POST, $name);
+}
