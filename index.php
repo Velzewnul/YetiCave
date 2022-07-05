@@ -4,17 +4,8 @@ require_once("functions.php");
 require_once("data.php");
 require_once("init.php");
 
-if (!$link) {
-    $error = mysqli_connect_error();
-} else {
-    $sql = "SELECT category_name, symbolic_name FROM categories";
-    $result = mysqli_query($link, $sql);
-    if ($result) {
-        $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
-        $error = mysqli_error($link);
-    }
-}
+$categories = get_categories($link);
+
 $sql = get_query_list_lots('2022-07-15');
 
 $res = mysqli_query($link, $sql);
