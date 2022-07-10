@@ -2,7 +2,7 @@
             <div class="lot-item__content">
                 <div class="lot-item__left">
                     <div class="lot-item__image">
-                        <img src="../<?= $lot["lot_image"];?>" width="730" height="548" alt="Сноуборд">
+                        <img src="<?= $lot["lot_image"];?>" width="730" height="548" alt="Сноуборд">
                     </div>
                     <p class="lot-item__category">Категория: <span><?= $lot["category_name"];?></span></p>
                     <p class="lot-item__description">Отличная вещь</p>
