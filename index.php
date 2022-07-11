@@ -4,8 +4,6 @@ require_once("functions.php");
 require_once("data.php");
 require_once("init.php");
 
-session_start();
-
 $categories = get_categories($link);
 
 $sql = get_query_list_lots('2022-07-15');
