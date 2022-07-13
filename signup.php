@@ -3,6 +3,7 @@ require_once("helpers.php");
 require_once("functions.php");
 require_once("data.php");
 require_once("init.php");
+require_once("models.php");
 
 $categories = get_categories($link);
 
@@ -53,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "errors" => $errors
         ]);
     } else {
-        $users_data = get_users_data ($link);
+        $users_data = get_users_data($link);
         $emails = array_column($users_data, "email");
         $names = array_column($users_data, "name");
         if (in_array($user["email"], $emails)) {

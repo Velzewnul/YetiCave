@@ -3,6 +3,9 @@ require_once("helpers.php");
 require_once("functions.php");
 require_once("data.php");
 require_once("init.php");
+require_once("models.php");
+
+session_start();
 
 $categories = get_categories($link);
 

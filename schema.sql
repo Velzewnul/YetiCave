@@ -7,28 +7,28 @@ USE YetiCave;
 CREATE TABLE categories
 (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    category_name char(64) NOT NULL UNIQUE,
-    symbolic_name char(64) NOT NULL UNIQUE
+    category_name VARCHAR(128) NOT NULL UNIQUE,
+    symbolic_name VARCHAR(128)
 );
 
 CREATE TABLE users
 (
     id                INT AUTO_INCREMENT PRIMARY KEY,
-    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    email             char(64) NOT NULL UNIQUE,
-    name              char(10) NOT NULL,
-    password          VARCHAR(32) NOT NULL,
-    contact_info      char(128) NOT NULL
+    registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    email             VARCHAR(128) NOT NULL UNIQUE,
+    name              VARCHAR(128),
+    password          VARCHAR(255),
+    contact_info      TEXT
 );
 
 CREATE TABLE lots
 (
     id              INT AUTO_INCREMENT PRIMARY KEY,
-    add_date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    lot_title       VARCHAR(64) NOT NULL,
+    add_date        DATETIME DEFAULT CURRENT_TIMESTAMP,
+    lot_title       VARCHAR(255),
     lot_description TEXT,
-    lot_image       VARCHAR(64),
-    start_price     int         NOT NULL,
+    lot_image       VARCHAR(255),
+    start_price     int,
     end_date        DATE,
     bet_step        int,
     user_id         int,
@@ -42,8 +42,8 @@ CREATE TABLE lots
 CREATE TABLE bets
 (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    bet_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    bet_sum int NOT NULL,
+    bet_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    bet_sum int,
     user_id int,
     lot_id int,
     FOREIGN KEY (user_id) REFERENCES users(id),

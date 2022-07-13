@@ -3,7 +3,7 @@
     <h2>Добавление лота</h2>
     <div class="form__container-two">
         <?php $classname = isset($errors['lot_title']) ? "form__item--invalid" : ""; ?>
-        <div class="form__item form__item--invalid"> <!-- form__item--invalid -->
+        <div class="form__item form__item--invalid <?= $classname; ?>"> <!-- form__item--invalid -->
 
             <label for="lot_title">Наименование <sup>*</sup></label>
             <input id="lot_title" type="text" name="lot_title" placeholder="Введите наименование лота" value="<?= $lot['lot-name'] ;?>">

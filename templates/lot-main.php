@@ -8,6 +8,7 @@
                     <p class="lot-item__description">Отличная вещь</p>
                 </div>
                 <div class="lot-item__right">
+                    <?php if(isset($_SESSION('user'))): ?>
                     <div class="lot-item__state">
                         <?php $res = get_time_left($lot["end_date"]); ?>
                         <div class="lot-item__timer timer <?php if ($res[0] < 1):?>timer--finishing<?php endif; ?>">
@@ -31,6 +32,7 @@
                             <button type="submit" class="button">Сделать ставку</button>
                         </form>
                     </div>
+                    <?php endif; ?>
                     <div class="history">
                         <h3>История ставок (<span>10</span>)</h3>
                         <table class="history__list">

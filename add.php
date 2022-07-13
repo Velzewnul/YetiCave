@@ -3,6 +3,7 @@ require_once("helpers.php");
 require_once("functions.php");
 require_once("data.php");
 require_once("init.php");
+require_once("models.php");
 
 $categories = get_categories($link);
 $categories_id = array_column($categories, "id");
@@ -20,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $rules = [
         'end_date' => function($value) {
-            return is_date_valid($value);
+            return validate_date($value);
         },
         'category' => function($value) use ($categories_id) {
             return validate_category($value, $categories_id);
