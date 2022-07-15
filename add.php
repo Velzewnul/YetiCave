@@ -6,7 +6,6 @@ require_once("init.php");
 require_once("models.php");
 
 $categories = get_categories($link);
-$categories_id = array_column($categories, "id");
 
 $page_content = include_template("add-lot.php", [
     'categories' => $categories

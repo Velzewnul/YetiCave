@@ -8,7 +8,7 @@ require_once("models.php");
 $categories = get_categories($link);
 
 $page_content = include_template('signup-main.php', [
-    'categories' => $categories,
+    'categories' => $categories
 ]);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $res = mysqli_stmt_execute($stmt);
 
             if ($res) {
-                header("Location: /login.php");
+                header("Location: YetiCave/login.php");
             } else {
                 $error = mysqli_error($link);
             }

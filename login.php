@@ -7,15 +7,27 @@ require_once("models.php");
 
 $categories = get_categories($link);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $form = $_POST;
+$page_content = include_template('login-main.php', [
+    'categories' => $categories
+]);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $req_fields = ['email', 'password'];
     $errors = [];
+
+    $rules = [
+        "email" => function($value) {
+            return validate_email($value);
+        },
+        "password" => function($value) {
+            return validate_length ($value, 6, 8);
+        }
+        ];
 
     $user = filter_input_array(INPUT_POST,
         [
             "email" => FILTER_DEFAULT,
-            "password" => FILTER_DEFAULT,
+            "password" => FILTER_DEFAULT
         ], true);
 
     foreach ($user as $field => $value) {
@@ -30,47 +42,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $errors = array_filter($errors);
 
-    $email = mysqli_real_escape_string($link, $form['email']);
-    $sql = "SELECT * FROM users WHERE email = '$email'";
-    $res = mysqli_query($link, $sql);
-
-    $user = $res ? mysqli_fetch_array($res, MYSQLI_ASSOC) : null;
-
-    if (!count($errors) and $user) {
-        if (password_verify($form['password'], $user['password'])) {
-            $_SESSION['user'] = $user;
-        } else {
-            $errors['password'] = 'Неверный пароль';
-        }
-    } else {
-        $errors['email'] = 'Такой пользователь не найден';
-    }
-
     if (count($errors)) {
-        $page_content = include_template('login.php', ['form' => $form, 'errors' => $errors]);
+        $page_content = include_template('login-main.php', [
+            'categories' => $categories,
+            'errors' => $errors,
+            'user' => $user
+            ]);
     } else {
-        header("Location: /index.php");
-        exit();
-    }
-} else {
-    $page_content = include_template('login.php', []);
+        $users_data = get_login($link, $user['email']);
+        if ($users_data) {
+            if (password_verify(($user['password']), $users_data['password'])) {
+                $issession = session_start();
+                $_SESSION['name'] = $users_data['name'];
+                $_SESSION['id'] = $users_data['id'];
 
-    if (isset($_SESSION['user'])) {
-        header("Location: /index.php");
-        exit();
+                header("Location: YetiCave/index.php");
+            } else {
+                $errors['password'] = "Вы ввели неверный пароль";
+            }
+        } else  {
+            $errors['email'] = "Пользователь с таким email не зарегистрирован";
+        }
     }
 }
 
-$page_content = include_template('login-main.php', [
-    'categories' => $categories,
-    'email' => $email,
-    'password' => $password
-]);
+
 
 $layout_content = include_template('layout.php', [
     'content'    => $page_content,
-    'categories' => [],
-    'title'      => 'YetiCave авторизация'
+    'categories' => $categories,
+    'title'      => 'YetiCave авторизация',
+    'is_auth' => $is_auth,
+    'user_name' => $user_name
 ]);
 
 print($layout_content);

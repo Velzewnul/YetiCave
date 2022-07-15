@@ -18,7 +18,7 @@ function get_query_list_lots ($date) {
 function get_query_lot ($id_lot) {
     return "SELECT lots.lot_title, lots.start_price, lots.lot_image, lots.end_date, categories.category_name FROM lots
     JOIN categories ON lots.category_id=categories.id
-    WHERE lots.id = $lot_id";
+    WHERE lots.id = $id_lot";
 }
 /**
  * Формирует SQL-запрос для создания нового лота
@@ -91,18 +91,18 @@ function get_query_create_user() {
  * @return [Array | String] $users_data Массив с данными пользователя: id адресс электронной почты имя и хеш пароля
  * или описание последней ошибки подключения
  */
-function get_login($con, $email) {
-    if (!$con) {
+function get_login($link, $email) {
+    if (!$link) {
         $error = mysqli_connect_error();
         return $error;
     } else {
-        $sql = "SELECT id, email, user_name, user_password FROM users WHERE email = '$email'";
-        $result = mysqli_query($con, $sql);
+        $sql = "SELECT id, email, name, password FROM users WHERE email = '$email'";
+        $result = mysqli_query($link, $sql);
         if ($result) {
             $users_data= get_arrow($result);
             return $users_data;
         }
-        $error = mysqli_error($con);
+        $error = mysqli_error($link);
         return $error;
     }
 }
