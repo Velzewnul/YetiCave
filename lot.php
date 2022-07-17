@@ -5,17 +5,11 @@ require_once("data.php");
 require_once("init.php");
 require_once("models.php");
 
-if (!$link) {
-    $error = mysqli_connect_error();
-} else {
-    $sql = "SELECT category_name, symbolic_name FROM categories";
-    $result = mysqli_query($link, $sql);
-    if ($result) {
-        $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    } else {
-        $error = mysqli_error($link);
-    }
-}
+$categories = get_categories($link);
+
+$page_content = include_template('signup-main.php', [
+    'categories' => $categories
+]);
 
 $id=filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 if ($id) {
@@ -27,13 +21,13 @@ if ($id) {
 
 $res = mysqli_query($link, $sql);
 if ($res) {
-    $lot = mysqli_fetch_assoc($res);
+    $lot = get_arrow($res);
 } else {
     $error = mysqli_error($link);
 }
 
 if (!$lot) {
-    http_response_code(404);
+    print($layout_content);
     die();
 }
 
@@ -44,7 +38,7 @@ $page_content = include_template("lot-main.php", [
 $layout_content = include_template("layout.php", [
     "content" => $page_content,
     "categories" => $categories,
-    "title" => "Главная",
+    "title" => $lot['lot_title'],
     "is_auth" => $is_auth,
     "user_name" => $user_name
 ]);
