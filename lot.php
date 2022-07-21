@@ -31,10 +31,49 @@ if (!$lot) {
     die();
 }
 
+$history = get_bets_history($link, $id);
+$current_price = max($lot["start_price"], $history[0]["bet_sum"]);
+$min_bet = $current_price + $lot['bet_step'];
+
 $page_content = include_template("lot-main.php", [
     "categories" => $categories,
-    "lot" => $lot
+    "lot" => $lot,
+    "is_auth" => $is_auth,
+    "user_name" => $user_name,
+    "current_price" => $current_price,
+    "min_bet" => $min_bet,
+    "id" => $id,
+    "history" => $history
 ]);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $bet = filter_input(INPUT_POST, 'cost', FILTER_VALIDATE_INT);
+
+    if ($bet < $min_bet) {
+        $error = "Ставка не должна быть меньше $min_bet";
+    }
+    if (empty($bet)) {
+        $error = "Ставка должна быть целым числом больше нуля";
+    }
+
+    if ($error) {
+        $page_content = include_template("lot-main.php",[
+            "categories" => $categories,
+            "lot" => $lot,
+            "is_auth" => $is_auth,
+            "user_name" => $user_name,
+            "current_price" => $current_price,
+            "min_bet" => $min_bet,
+            "id" => $id,
+            "history" => $history,
+            "error" => $error
+        ]);
+    } else {
+        $res = add_bet_database($link, $bet, $_SESSION["id"], $id);
+        header("Location: /lot.php?id= . $id");
+    }
+}
+
 $layout_content = include_template("layout.php", [
     "content" => $page_content,
     "categories" => $categories,

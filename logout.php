@@ -2,4 +2,4 @@
 session_start();
 
 $_SESSION = [];
-header("Location: YetiCave/index.php");
+header("Location: /index.php");

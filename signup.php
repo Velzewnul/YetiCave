@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $res = mysqli_stmt_execute($stmt);
 
             if ($res) {
-                header("Location: YetiCave/login.php");
+                header("Location: /login.php");
             } else {
                 $error = mysqli_error($link);
             }

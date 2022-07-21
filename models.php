@@ -152,3 +152,80 @@ function get_count_lots($link, $words) {
     $error = mysqli_error($con);
     return $error;
 }
+
+/**
+ * Записывает в БД сделанную ставку
+ * @param $link mysqli Ресурс соединения
+ * @param int $sum Сумма ставки
+ * @param int $user_id ID пользователя
+ * @param int $lot_id ID лота
+ * @return bool $res Возвращает true в случае успешной записи
+ */
+function add_bet_database($link, $sum, $user_id, $lot_id) {
+    $sql = "INSERT INTO bets (bet_date, bet_sum, user_id, lot_id) VALUE (NOW(), ?, $user_id, $lot_id);";
+    $stmt = mysqli_prepare($link, $sql);
+    mysqli_stmt_bind_param($stmt, 'i', $sum);
+    $res = mysqli_stmt_execute($stmt);
+    if ($res) {
+        return $res;
+    }
+    $error = mysqli_error($link);
+    return $error;
+}
+
+/**
+ * Возвращает массив из десяти последних ставок на этот лот
+ * @param $link Подключение к MySQL
+ * @param int $id_lot Id лота
+ * @return [Array | String] $list_bets Ассоциативный массив со списком ставок на этот лот из базы данных
+ * или описание последней ошибки подключения
+ */
+function get_bets_history ($link, $id_lot) {
+    if (!$link) {
+        $error = mysqli_connect_error();
+        return $error;
+    } else {
+        $sql = "SELECT users.name, bets.bet_sum, DATE_FORMAT(bet_date, '%d.%m.%y %H:%i') AS bet_date
+        FROM bets
+        JOIN lots ON bets.lot_id=lots.id
+        JOIN users ON bets.user_id=users.id
+        WHERE lots.id=$id_lot
+        ORDER BY bets.bet_date DESC LIMIT 10;";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $list_bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            return $list_bets;
+        }
+        $error = mysqli_error($link);
+        return $error;
+    }
+}
+/**
+ * Возвращает массив ставок пользователя
+ * @param $link Подключение к MySQL
+ * @param int $id Id пользователя
+ * @return [Array | String] $list_bets Ассоциативный массив ставок
+ *  пользователя из базы данных
+ * или описание последней ошибки подключения
+ */
+function get_bets ($link, $id) {
+    if (!$link) {
+        $error = mysqli_connect_error();
+        return $error;
+    } else {
+        $sql = "SELECT DATE_FORMAT(bets.bet_date, '%d.%m.%y %H:%i') AS date_bet, bets.bet_sum, lots.lot_title, lots.lot_description, lots.lot_image, lots.end_date, lots.id, categories.category_name
+        FROM bets
+        JOIN lots ON bets.lot_id=lots.id
+        JOIN users ON bets.user_id=users.id
+        JOIN categories ON lots.category_id=categories.id
+        WHERE bets.user_id=$id
+        ORDER BY bets.bet_date DESC;";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $list_bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            return $list_bets;
+        }
+        $error = mysqli_error($link);
+        return $error;
+    }
+}

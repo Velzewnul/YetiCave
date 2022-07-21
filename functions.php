@@ -180,3 +180,14 @@ function validate_length ($value, $min, $max) {
         }
     }
 }
+
+/**
+ * Проверяет что значение больше или равно, чем текущая цена лота + шаг ставки
+ * @param string $num число которое ввел пользователь в форму
+ * @return string Текст сообщения об ошибке
+ */
+function validate_add_bet ($num) {
+    if ($num < ($lots[start_price] + $lots[bet_step])) {
+        return "Содержимое поля должно быть больше или равно, чем текущая цена лота + шаг ставки";
+    }
+};

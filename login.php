@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['name'] = $users_data['name'];
                 $_SESSION['id'] = $users_data['id'];
 
-                header("Location: YetiCave/index.php");
+                header("Location: /index.php");
             } else {
                 $errors['password'] = "Вы ввели неверный пароль";
             }
