@@ -7,15 +7,22 @@ require_once("models.php");
 
 $categories = get_categories($link);
 
-$page_content = include_template('signup-main.php', [
+$page_content = include_template('404-main.php', [
     'categories' => $categories
+]);
+$layout_content = include_template("layout.php", [
+    "content" => $page_content,
+    "categories" => $categories,
+    "title" => "Страница не найдена",
+    "is_auth" => $is_auth,
+    "user_name" => $user_name
 ]);
 
 $id=filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 if ($id) {
     $sql = get_query_lot($id);
 } else {
-    http_response_code(404);
+    print($layout_content);
     die();
 }
 
@@ -39,7 +46,6 @@ $page_content = include_template("lot-main.php", [
     "categories" => $categories,
     "lot" => $lot,
     "is_auth" => $is_auth,
-    "user_name" => $user_name,
     "current_price" => $current_price,
     "min_bet" => $min_bet,
     "id" => $id,
@@ -50,13 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $bet = filter_input(INPUT_POST, 'cost', FILTER_VALIDATE_INT);
 
     if ($bet < $min_bet) {
-        $error = "Ставка не должна быть меньше $min_bet";
+        $errors = "Ставка не должна быть меньше $min_bet";
     }
     if (empty($bet)) {
-        $error = "Ставка должна быть целым числом больше нуля";
+        $errors = "Ставка должна быть целым числом больше нуля";
     }
 
-    if ($error) {
+    if (count($errors)) {
         $page_content = include_template("lot-main.php",[
             "categories" => $categories,
             "lot" => $lot,
@@ -66,11 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "min_bet" => $min_bet,
             "id" => $id,
             "history" => $history,
-            "error" => $error
+            "errors" => $errors
         ]);
     } else {
         $res = add_bet_database($link, $bet, $_SESSION["id"], $id);
-        header("Location: /lot.php?id= . $id");
+        header("Location: /lot.php?id=" . $id);
     }
 }
 

@@ -63,6 +63,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else  {
             $errors['email'] = "Пользователь с таким email не зарегистрирован";
         }
+        if (count($errors)) {
+            $page_content = include_template("main-login.php", [
+                "categories" => $categories,
+                "user" => $user,
+                "errors" => $errors
+            ]);
+        }
     }
 }
 

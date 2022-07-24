@@ -11,9 +11,21 @@ $page_content = include_template("add-lot.php", [
     'categories' => $categories
 ]);
 
-/**
- * Сделаем проверку поля даты окончания
- */
+if (!$is_auth) {
+    $page_content = include_template("main-403.php", [
+        "header" => $header
+    ]);
+    $layout_content = include_template("layout.php", [
+        "content" => $page_content,
+        "categories" => $categories,
+        "title" => "Доступ запрещен",
+        "is_auth" => $is_auth,
+        "user_name" => $user_name
+    ]);
+    print($layout_content);
+    die();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $required = ['lot_title', 'category', 'lot_description', 'lot_image', 'start_price', 'bet_step', 'end_date'];
     $errors = [];
@@ -33,9 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     ];
 
-    /**
-     * Сделаем проверку полей на заполненность
-     */
     $lot = filter_input_array(INPUT_POST, [
         'lot_title' => FILTER_DEFAULT,
         'category' => FILTER_DEFAULT,
@@ -102,16 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-
-$page_head = include_template("head.php", [
-    'title' => "Добавить лот"
-]);
 $layout_content = include_template("layout.php", [
     'content' => $page_content,
     'categories' => $categories,
+    "title" => "Добавить лот",
     'is_auth' => $is_auth,
     'user_name' => $user_name
 ]);
 
-print($page_head);
 print($layout_content);

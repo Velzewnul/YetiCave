@@ -229,3 +229,18 @@ function get_bets ($link, $id) {
         return $error;
     }
 }
+
+/**
+ * Записывает в БД данные пользователя из формы
+ * @param $link mysqli Ресурс соединения
+ * @param array $data Данные пользователя, полученные из формы
+ * @return bool $res Возвращает true в случае успешного выполнения
+ */
+function add_user_database($link, $data = []) {
+    $sql = "INSERT INTO users (registration_date, email, password, name, contact_info) VALUES (NOW(), ?, ?, ?, ?);";
+    $data["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
+
+    $stmt = db_get_prepare_stmt_version($link, $sql, $data);
+    $res = mysqli_stmt_execute($stmt);
+    return $res;
+}
