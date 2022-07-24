@@ -11,7 +11,7 @@ $page_content = include_template('search.php', [
     'categories' => $categories
 ]);
 
-$search= htmlspecialchars($_GET['search']);
+$search = htmlspecialchars($_GET['search']);
 
 if ($search) {
     $items_count = get_count_lots($link, $search);

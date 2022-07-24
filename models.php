@@ -4,7 +4,8 @@
  * @param string $date Дата в виде строки, в формате 'YYYY-MM-DD'
  * @return string SQL-запрос
  */
-function get_query_list_lots ($date) {
+function get_query_list_lots($date)
+{
     return "SELECT lots.id, lots.lot_title, lots.start_price, lots.lot_image, lots.end_date, categories.category_name FROM lots
     JOIN categories ON lots.category_id=categories.id
     WHERE end_date > $date ORDER BY end_date DESC";
@@ -15,26 +16,31 @@ function get_query_list_lots ($date) {
  * @param integer $id_lot id лота
  * @return string SQL-запрос
  */
-function get_query_lot ($id_lot) {
+function get_query_lot($id_lot)
+{
     return "SELECT lots.lot_title, lots.start_price, lots.lot_image, lots.end_date, categories.category_name FROM lots
     JOIN categories ON lots.category_id=categories.id
     WHERE lots.id = $id_lot";
 }
+
 /**
  * Формирует SQL-запрос для создания нового лота
  * @param integer $user_id id пользователя
  * @return string SQL-запрос
  */
-function get_query_create_lot ($user_id) {
+function get_query_create_lot($user_id)
+{
     return "INSERT INTO lots (lot_title, category_id, lot_description, start_price, bet_step, end_date, lot_image, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, $user_id);";
 }
+
 /**
  * Возвращает массив категорий
  * @param $con Подключение к MySQL
  * @return [Array | String] $categuries Ассоциативный массив с категориями лотов из базы данных
  * или описание последней ошибки подключения
  */
-function get_categories ($link) {
+function get_categories($link)
+{
     if (!$link) {
         $error = mysqli_connect_error();
         return $error;
@@ -50,6 +56,7 @@ function get_categories ($link) {
         }
     }
 }
+
 //New
 /**
  * Возвращает массив данных пользователей: адресс электронной почты и имя
@@ -57,7 +64,8 @@ function get_categories ($link) {
  * @return [Array | String] $users_data Двумерный массив с именами и емейлами пользователей
  * или описание последней ошибки подключения
  */
-function get_users_data($link) {
+function get_users_data($link)
+{
     if (!$link) {
         $error = mysqli_connect_error();
         return $error;
@@ -65,7 +73,7 @@ function get_users_data($link) {
         $sql = "SELECT email, name FROM users;";
         $result = mysqli_query($link, $sql);
         if ($result) {
-            $users_data= get_arrow($result);
+            $users_data = get_arrow($result);
             return $users_data;
         }
         $error = mysqli_error($link);
@@ -78,7 +86,8 @@ function get_users_data($link) {
  * @param integer $user_id id пользователя
  * @return string SQL-запрос
  */
-function get_query_create_user() {
+function get_query_create_user()
+{
     return "INSERT INTO users (registration_date, email, password, name, contact_info) VALUES (NOW(), ?, ?, ?, ?);";
 }
 
@@ -91,7 +100,8 @@ function get_query_create_user() {
  * @return [Array | String] $users_data Массив с данными пользователя: id адресс электронной почты имя и хеш пароля
  * или описание последней ошибки подключения
  */
-function get_login($link, $email) {
+function get_login($link, $email)
+{
     if (!$link) {
         $error = mysqli_connect_error();
         return $error;
@@ -99,7 +109,7 @@ function get_login($link, $email) {
         $sql = "SELECT id, email, name, password FROM users WHERE email = '$email'";
         $result = mysqli_query($link, $sql);
         if ($result) {
-            $users_data= get_arrow($result);
+            $users_data = get_arrow($result);
             return $users_data;
         }
         $error = mysqli_error($link);
@@ -114,7 +124,8 @@ function get_login($link, $email) {
  * @return [Array | String] $goods Двумерный массив лотов, в названии или описании которых есть такие слова
  * или описание последней ошибки подключения
  */
-function get_found_lots($link, $words, $limit, $offset) {
+function get_found_lots($link, $words, $limit, $offset)
+{
     $sql = "SELECT lots.id, lots.lot_title, lots.start_price, lots.lot_image, lots.end_date, categories.category_name FROM lots
     JOIN categories ON lots.category_id=categories.id
     WHERE MATCH(lot_title, lot_description) AGAINST(?) ORDER BY add_date DESC LIMIT $limit OFFSET $offset;";
@@ -130,6 +141,7 @@ function get_found_lots($link, $words, $limit, $offset) {
     $error = mysqli_error($link);
     return $error;
 }
+
 /**
  * Возвращает количество лотов соответствующих поисковым словам
  * @param $link mysqli Ресурс соединения
@@ -137,7 +149,8 @@ function get_found_lots($link, $words, $limit, $offset) {
  * @return [int | String] $count Количество лотов, в названии или описании которых есть такие слова
  * или описание последней ошибки подключения
  */
-function get_count_lots($link, $words) {
+function get_count_lots($link, $words)
+{
     $sql = "SELECT COUNT(*) as cnt FROM lots
     WHERE MATCH(lot_title, lot_description) AGAINST(?);";
 
@@ -161,7 +174,8 @@ function get_count_lots($link, $words) {
  * @param int $lot_id ID лота
  * @return bool $res Возвращает true в случае успешной записи
  */
-function add_bet_database($link, $sum, $user_id, $lot_id) {
+function add_bet_database($link, $sum, $user_id, $lot_id)
+{
     $sql = "INSERT INTO bets (bet_date, bet_sum, user_id, lot_id) VALUE (NOW(), ?, $user_id, $lot_id);";
     $stmt = mysqli_prepare($link, $sql);
     mysqli_stmt_bind_param($stmt, 'i', $sum);
@@ -180,7 +194,8 @@ function add_bet_database($link, $sum, $user_id, $lot_id) {
  * @return [Array | String] $list_bets Ассоциативный массив со списком ставок на этот лот из базы данных
  * или описание последней ошибки подключения
  */
-function get_bets_history ($link, $id_lot) {
+function get_bets_history($link, $id_lot)
+{
     if (!$link) {
         $error = mysqli_connect_error();
         return $error;
@@ -200,6 +215,7 @@ function get_bets_history ($link, $id_lot) {
         return $error;
     }
 }
+
 /**
  * Возвращает массив ставок пользователя
  * @param $link Подключение к MySQL
@@ -208,7 +224,8 @@ function get_bets_history ($link, $id_lot) {
  *  пользователя из базы данных
  * или описание последней ошибки подключения
  */
-function get_bets ($link, $id) {
+function get_bets($link, $id)
+{
     if (!$link) {
         $error = mysqli_connect_error();
         return $error;
@@ -236,7 +253,8 @@ function get_bets ($link, $id) {
  * @param array $data Данные пользователя, полученные из формы
  * @return bool $res Возвращает true в случае успешного выполнения
  */
-function add_user_database($link, $data = []) {
+function add_user_database($link, $data = [])
+{
     $sql = "INSERT INTO users (registration_date, email, password, name, contact_info) VALUES (NOW(), ?, ?, ?, ?);";
     $data["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
 

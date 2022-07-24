@@ -10,17 +10,17 @@ $categories = get_categories($link);
 $sql = get_query_list_lots('2022-07-15');
 
 $res = mysqli_query($link, $sql);
-    if ($res) {
-        $goods = get_arrow($res);
-    } else {
-        $error = mysqli_error($link);
-    }
+if ($res) {
+    $goods = get_arrow($res);
+} else {
+    $error = mysqli_error($link);
+}
 
-$page_content = include_template("main.php",[
+$page_content = include_template("main.php", [
     "categories" => $categories,
     "goods" => $goods
 ]);
-$layout_content = include_template("layout.php",[
+$layout_content = include_template("layout.php", [
     "content" => $page_content,
     "categories" => $categories,
     "title" => "Главная",

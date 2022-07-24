@@ -31,16 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
 
     $rules = [
-        'end_date' => function($value) {
+        'end_date' => function ($value) {
             return validate_date($value);
         },
-        'category' => function($value) use ($categories_id) {
+        'category' => function ($value) use ($categories_id) {
             return validate_category($value, $categories_id);
         },
-        'start_price' => function($value) {
+        'start_price' => function ($value) {
             return validate_number($value);
         },
-        'bet_step' => function($value) {
+        'bet_step' => function ($value) {
             return validate_number($value);
         }
     ];
@@ -52,7 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'lot_image' => FILTER_DEFAULT,
         'start_price' => FILTER_DEFAULT,
         'bet_step' => FILTER_DEFAULT,
-        'end_date' => FILTER_DEFAULT], true);
+        'end_date' => FILTER_DEFAULT
+    ], true);
 
 
     foreach ($lot as $key => $value) {
@@ -75,9 +76,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $file_type = finfo_file($finfo, $tmp_name);
         if ($file_type === "image/png") {
-            $ext=".png";
-        } else if ($file_type !== "image/jpeg") {
-            $ext=".jpg";
+            $ext = ".png";
+        } else {
+            if ($file_type !== "image/jpeg") {
+                $ext = ".jpg";
+            }
         }
         if ($ext) {
             $filename = uniqid() . $ext;
@@ -88,26 +91,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         $errors['lot_image'] = 'Вы не загрузили пикчу';
-        }
+    }
 
 
     if (count($errors)) {
         $page_content = include_template('add-lot.php', [
             'lot' => $lot,
             'errors' => $errors,
-            'categories' => $categories]);
+            'categories' => $categories
+        ]);
     } else {
-    $sql = 'INSERT INTO lots(add_date, user_id, lot_title, category_id, lot_description, lot_image, start_price, bet_step, end_date)
+        $sql = 'INSERT INTO lots(add_date, user_id, lot_title, category_id, lot_description, lot_image, start_price, bet_step, end_date)
     VALUES (NOW(), 1, ?, ?, ?, ?, ?, ?, ?)';
-    $stmt = db_get_prepare_stmt($link, $sql, $lot);
-    $res = mysqli_stmt_execute($stmt);
+        $stmt = db_get_prepare_stmt($link, $sql, $lot);
+        $res = mysqli_stmt_execute($stmt);
 
-    if ($res) {
-        $lot_id = mysqli_insert_id($link);
-        header("Location: /lot.php?id=" . $lot_id);
-    } else {
-    $error = mysqli_error($link);
-    }
+        if ($res) {
+            $lot_id = mysqli_insert_id($link);
+            header("Location: /lot.php?id=" . $lot_id);
+        } else {
+            $error = mysqli_error($link);
+        }
     }
 }
 

@@ -16,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
 
     $rules = [
-        "email" => function($value) {
+        "email" => function ($value) {
             return validate_email($value);
         },
-        "password" => function($value) {
-            return validate_length ($value, 6, 8);
+        "password" => function ($value) {
+            return validate_length($value, 6, 8);
         }
-        ];
+    ];
 
     $user = filter_input_array(INPUT_POST,
         [
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'categories' => $categories,
             'errors' => $errors,
             'user' => $user
-            ]);
+        ]);
     } else {
         $users_data = get_login($link, $user['email']);
         if ($users_data) {
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $errors['password'] = "Вы ввели неверный пароль";
             }
-        } else  {
+        } else {
             $errors['email'] = "Пользователь с таким email не зарегистрирован";
         }
         if (count($errors)) {
@@ -74,11 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-
 $layout_content = include_template('layout.php', [
-    'content'    => $page_content,
+    'content' => $page_content,
     'categories' => $categories,
-    'title'      => 'YetiCave авторизация',
+    'title' => 'YetiCave авторизация',
     'is_auth' => $is_auth,
     'user_name' => $user_name
 ]);

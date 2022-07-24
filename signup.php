@@ -31,23 +31,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $errors = [];
 
     $rules = [
-        "email" => function($value) {
+        "email" => function ($value) {
             return validate_email($value);
         },
-        "password" => function($value) {
-            return validate_length ($value, 6, 8);
+        "password" => function ($value) {
+            return validate_length($value, 6, 8);
         },
-        "contact_info" => function($value) {
-            return validate_length ($value, 12, 1000);
+        "contact_info" => function ($value) {
+            return validate_length($value, 12, 1000);
         }
     ];
 
     $user = filter_input_array(INPUT_POST,
         [
-            "email"=>FILTER_DEFAULT,
-            "password"=>FILTER_DEFAULT,
-            "name"=>FILTER_DEFAULT,
-            "contact_info"=>FILTER_DEFAULT
+            "email" => FILTER_DEFAULT,
+            "password" => FILTER_DEFAULT,
+            "name" => FILTER_DEFAULT,
+            "contact_info" => FILTER_DEFAULT
         ], true);
 
     foreach ($user as $field => $value) {
@@ -74,10 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $names = array_column($users_data, "name");
         if (in_array($user["email"], $emails)) {
             $errors["email"] = "Пользователь с таким е-mail уже зарегистрирован";
-            }
+        }
         if (in_array($user["name"], $names)) {
             $errors["name"] = "Пользователь с таким именем уже зарегистрирован";
-            }
+        }
 
         if (count($errors)) {
             $page_content = include_template("signup-main.php", [
@@ -103,7 +103,6 @@ $layout_content = include_template("layout.php", [
     "is_auth" => $is_auth,
     "user_name" => $user_name
 ]);
-
 
 
 print($layout_content);
