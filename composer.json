@@ -1,0 +1,15 @@
+{
+  "name": "velzewnul/yeticave",
+  "description": "Online Auction",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Velzewnul",
+      "email": "bulgakov@htmlacademy.com"
+    }
+  ],
+  "require": {
+    "symfony/mailer": "^5.4"
+  }
+}
