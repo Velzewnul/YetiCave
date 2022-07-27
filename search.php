@@ -4,6 +4,7 @@ require_once("functions.php");
 require_once("data.php");
 require_once("init.php");
 require_once("models.php");
+require_once("vendor/autoload.php");
 
 $categories = get_categories($link);
 

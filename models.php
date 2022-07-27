@@ -82,6 +82,31 @@ function get_users_data($link)
 }
 
 /**
+ * Возвращает все лоты без победителей, дата истечения которых меньше или равна текущей дате.
+ * @param $link Подключение к MySQL
+ * @return [Array | String] $users_data Двумерный массив с именами и емейлами пользователей
+ * или описание последней ошибки подключения
+ */
+function get_lot_date_finish($link)
+{
+    if (!$link) {
+        $error = mysqli_connect_error();
+        return $error;
+    } else {
+        $sql = "SELECT id FROM lots "
+        . "WHERE (winner_id=null) "
+        . "AND ($res[0] < 24)";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $get_lot_date_finish = get_arrow($result);
+            return $get_lot_date_finish;
+        }
+        $error = mysqli_error($link);
+        return $error;
+    }
+}
+
+/**
  * Формирует SQL-запрос для регистрации нового пользователя
  * @param integer $user_id id пользователя
  * @return string SQL-запрос
@@ -162,7 +187,7 @@ function get_count_lots($link, $words)
         $count = mysqli_fetch_assoc($res)["cnt"];
         return $count;
     }
-    $error = mysqli_error($con);
+    $error = mysqli_error($link);
     return $error;
 }
 

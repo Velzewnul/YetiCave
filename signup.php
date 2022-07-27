@@ -4,6 +4,7 @@ require_once("functions.php");
 require_once("data.php");
 require_once("init.php");
 require_once("models.php");
+require_once("vendor/autoload.php");
 
 $categories = get_categories($link);
 
@@ -13,7 +14,7 @@ $page_content = include_template('signup-main.php', [
 
 if ($is_auth) {
     $page_content = include_template("403-main.php", [
-        "header" => $header,
+        "title" => "Ошибка 403",
         "categories" => $categories
     ]);
     $layout_content = include_template("layout.php", [

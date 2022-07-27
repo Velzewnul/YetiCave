@@ -4,6 +4,7 @@ require_once("functions.php");
 require_once("data.php");
 require_once("init.php");
 require_once("models.php");
+require_once("vendor/autoload.php");
 
 $categories = get_categories($link);
 
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return validate_number($value);
         },
         'bet_step' => function ($value) {
-            return validate_number($value);
+            return validate_add_bet($value);
         }
     ];
 
