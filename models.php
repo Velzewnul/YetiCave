@@ -93,13 +93,37 @@ function get_lot_date_finish($link)
         $error = mysqli_connect_error();
         return $error;
     } else {
-        $sql = "SELECT id FROM lots "
-        . "WHERE (winner_id=null) "
-        . "AND ($res[0] < 24)";
+        $sql = "SELECT * FROM lots WHERE winner_id IS null && end_date <= now();";
         $result = mysqli_query($link, $sql);
         if ($result) {
-            $get_lot_date_finish = get_arrow($result);
-            return $get_lot_date_finish;
+            $lots = mysqli_fetch_all($result, MYSQLI_ASSOC);
+            return $lots;
+        }
+        $error = mysqli_error($link);
+        return $error;
+    }
+}
+
+/**
+ * Возвращает последнюю ставку на лот
+ * @param $link Подключение к MySQL
+ * @param $id int id лота
+ * @return [Array | String] $users_data Двумерный массив с именами и емейлами пользователей
+ * или описание последней ошибки подключения
+ */
+function get_last_bet($link, $id)
+{
+    if (!$link) {
+        $error = mysqli_connect_error();
+        return $error;
+    } else {
+        $sql = "SELECT * FROM bets "
+            . "WHERE lot_id = $id"
+            . "ORDER BY bet_date DESC LIMIT 1";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $bet = get_arrow($result);
+            return $bet;
         }
         $error = mysqli_error($link);
         return $error;
@@ -213,6 +237,31 @@ function add_bet_database($link, $sum, $user_id, $lot_id)
 }
 
 /**
+ * Записывает в БД победителя аукциона за лот.
+ * @param $link mysqli Ресурс соединения
+ * @param int $sum Сумма ставки
+ * @param int $user_id ID пользователя
+ * @param int $lot_id ID лота
+ * @return bool $res Возвращает true в случае успешной записи
+ */
+function add_winner($link, $winner_id, $lot_id)
+{
+    if (!link) {
+        $error = mysqli_connect_error();
+        return $error;
+    } else {
+        $sql = UPDATE lots SET winner_id = $winner_id where id = $lot_id;
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            return $result;
+        } else {
+            $error = mysqli_connect_error();
+            return $error;
+        }
+    }
+}
+
+/**
  * Возвращает массив из десяти последних ставок на этот лот
  * @param $link Подключение к MySQL
  * @param int $id_lot Id лота
@@ -286,4 +335,29 @@ function add_user_database($link, $data = [])
     $stmt = db_get_prepare_stmt_version($link, $sql, $data);
     $res = mysqli_stmt_execute($stmt);
     return $res;
+}
+
+
+/**
+ * Возвращает email, телефон и имя пользователя по id
+ * @param $link Подключение к MySQL
+ * @param $id ID пользователя
+ * @return [Array | String] $user_date массив
+ * или описание последней ошибки подключения
+ */
+function get_user_contacts ($link, $id) {
+    if (!$link) {
+        $error = mysqli_connect_error();
+        return $error;
+    } else {
+        $sql = "SELECT users.name, users.email, users.contact_info FROM users
+        WHERE id=$id;";
+        $result = mysqli_query($link, $sql);
+        if ($result) {
+            $user_date = get_arrow($result);
+            return $user_date;
+        }
+        $error = mysqli_error($link);
+        return $error;
+    }
 }

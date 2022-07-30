@@ -30,4 +30,9 @@ $layout_content = include_template("layout.php", [
     "user_name" => $user_name
 ]);
 
+$get_winner = include_template("getwinner.php", [
+    "lots" => $lots,
+    "bet" => $bet
+])
+
 print($layout_content);
